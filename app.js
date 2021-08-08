@@ -90,7 +90,7 @@ function onGalleryClick(e) {
 closeModalBtn.addEventListener('click', onModalClose);
 
 function onModalClose() {
-  if (e.target.nodeName === 'IMG') { return };
+  // if (e.target.nodeName === 'IMG') { return };
   lightboxContainer.classList.remove('is-open');
   lightboxImg.src = '';
   window.removeEventListener('keydown', onEscKeyPress);
