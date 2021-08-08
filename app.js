@@ -74,7 +74,6 @@ const createItemEl = (acc, { preview, original, description }) => acc + `<li cla
 const createItemsList = galleryItems.reduce(createItemEl, '');
 galleryRef.insertAdjacentHTML('beforeend', createItemsList);
 
-
 galleryRef.addEventListener('click', onGalleryClick);
 
 function onGalleryClick(e) {
@@ -83,16 +82,21 @@ function onGalleryClick(e) {
   lightboxContainer.classList.add('is-open');
   lightboxImg.src = e.target.dataset.source;
   window.addEventListener('keydown', onEscKeyPress);
-}
-
+  window.addEventListener('keydown', onArrowRightPress);
+  window.addEventListener('keydown', onArrowLeftPress);
+  // console.log(e.target.dataset.source)
+};
 
 closeModalBtn.addEventListener('click', onModalClose);
 
 function onModalClose() {
+  if (e.target.nodeName === 'IMG') { return };
   lightboxContainer.classList.remove('is-open');
   lightboxImg.src = '';
-}
-
+  window.removeEventListener('keydown', onEscKeyPress);
+  window.removeEventListener('keydown', onArrowRightPress);
+  window.removeEventListener('keydown', onArrowLeftPress);
+};
 
 lightboxOverlay.addEventListener('click', onOverlayClick);
 
@@ -100,30 +104,33 @@ function onOverlayClick() {
   onModalClose();
 };
 
-
-window.addEventListener('keydown', onEscKeyPress);
-
 function onEscKeyPress(e) {
   if (e.code === 'Escape') {
-    onModalClose()
+    onModalClose();
   };
 };
 
-window.addEventListener('keydown', onArrowRightPress);
+const newArr = galleryItems.map((item) => item.original);
 
-function onArrowRightPress(e) {  
+function onArrowRightPress(e) {
+  const index = newArr.indexOf(lightboxImg.src);
   if (e.code === 'ArrowRight') {
-    console.log(`нажал вправо`);
-  }
-}
-
-window.addEventListener('keydown', onArrowLeftPress);
+    if (index !== galleryItems.length-1) { lightboxImg.src = newArr[index + 1] }
+    else { lightboxImg.src = newArr[0] }
+    // console.log(index)
+    // console.log(`нажал вправо`);
+  };
+};
 
 function onArrowLeftPress(e) {
+  const index = newArr.indexOf(lightboxImg.src);
   if (e.code === 'ArrowLeft') {
-    console.log('нажал влево')
-  }
-}
+    if (index !== 0) { lightboxImg.src = newArr[index - 1] }
+    else { lightboxImg.src = newArr[newArr.length-1] }
+    // console.log(index)
+    // console.log('нажал влево');
+  };
+};
 
 
 
